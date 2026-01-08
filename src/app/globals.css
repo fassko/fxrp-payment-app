@@ -3,11 +3,17 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --flare-pink: #E6007A;
+  --flare-pink-dark: #C40066;
+  --flare-pink-light: #FF1A8C;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-flare-pink: var(--flare-pink);
+  --color-flare-pink-dark: var(--flare-pink-dark);
+  --color-flare-pink-light: var(--flare-pink-light);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

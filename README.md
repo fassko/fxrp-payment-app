@@ -1,24 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FXRP Payment App
+
+A Next.js application for making FXRP payments on the Flare Coston2 testnet using the Flare Wagmi periphery package.
+
+## Features
+
+- Connect wallet using Web3 wallets (MetaMask, etc.)
+- View FXRP balance
+- Send FXRP tokens to any address
+- Real-time transaction status
+- Built with Next.js, Wagmi, and Tailwind CSS
+
+## Dynamic FXRP Address Resolution
+
+The app dynamically fetches the FXRP contract address using:
+1. **FlareContractsRegistry** → `getContractAddressByName('AssetManagerFXRP')`
+2. **AssetManagerFXRP** → `fAsset()` function
+
+This ensures the correct FXRP address is always used, even if it changes.
 
 ## Getting Started
 
-First, run the development server:
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Open [http://localhost:3000](http://localhost:3000) with your browser
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+4. Connect your wallet and switch to Coston2 network
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Technical Implementation
+
+- **ERC-20 ABI**: Uses OpenZeppelin's official IERC20 interface
+- **Contract ABIs**: Flare contracts use minimal required function signatures  
+- **Dynamic Address**: FXRP address fetched via FlareContractsRegistry
+- **SSR Support**: Proper hydration handling for Next.js
+- **Type Safety**: Full TypeScript implementation
+
+## Network Configuration
+
+The app is configured for Flare Testnet (Coston2) using the official wagmi chain:
+- Chain ID: 114
+- Name: Flare Testnet
+- Uses official `flareTestnet` from `@wagmi/chains`
+
+## Usage
+
+1. **Connect Wallet**: Click "Connect Wallet" and approve the connection
+2. **Switch Network**: Ensure you're connected to Coston2 testnet
+3. **Get Test FXRP**: Obtain test FXRP tokens from a faucet or DEX
+4. **Send Payment**: Enter recipient address and amount, then confirm transaction
 
 ## Learn More
 
