@@ -34,7 +34,7 @@ export function FxrpPayment() {
 
   return (
     <div className="w-full max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-lg border border-gray-200">
-      <div className="mb-4 p-4 bg-gradient-to-r from-pink-50 to-rose-50 rounded-lg border border-pink-200">
+      <div className="mb-4 p-4 bg-linear-to-r from-pink-50 to-rose-50 rounded-lg border border-pink-200">
         <p className="font-bold text-gray-900 mb-2">Your FXRP Balance:</p>
         {isLoadingBalance ? (
           <p className="font-bold text-gray-800">Loading...</p>

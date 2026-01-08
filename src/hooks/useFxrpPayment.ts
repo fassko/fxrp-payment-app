@@ -1,30 +1,18 @@
 'use client'
 
 import { useWriteContract, useWaitForTransactionReceipt, useReadContract } from 'wagmi'
-import { parseUnits, formatUnits } from 'viem'
+import { parseUnits, erc20Abi } from 'viem'
+
 import { useFxrpAddress } from './useFxrpAddress'
-import IERC20MetadataArtifact from '@openzeppelin/contracts/build/contracts/IERC20Metadata.json'
-
-const ERC20_ABI = IERC20MetadataArtifact.abi
-
-// Helper function to format balance using decimals
-function formatBalance(balance: bigint | undefined, decimals: number | undefined): string {
-  if (!balance || decimals === undefined) return '0'
-  return formatUnits(balance, decimals)
-}
+import { formatBalance } from '../lib/format'
 
 export function useFxrpPayment() {
   const { fxrpAddress } = useFxrpAddress()
   
-  const { 
-    writeContract, 
-    data: hash,
-    isPending,
-    error 
-  } = useWriteContract()
+  const writeContract = useWriteContract()
 
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
-    hash,
+    hash: writeContract.data,
   })
 
   const sendFxrp = async (to: string, amount: string, decimals?: number) => {
@@ -38,9 +26,9 @@ export function useFxrpPayment() {
     try {
       const amountInUnits = parseUnits(amount, decimals)
       
-      writeContract({
+      writeContract.mutate({
         address: fxrpAddress,
-        abi: ERC20_ABI,
+        abi: erc20Abi,
         functionName: 'transfer',
         args: [to as `0x${string}`, amountInUnits],
       })
@@ -52,11 +40,11 @@ export function useFxrpPayment() {
 
   return {
     sendFxrp,
-    hash,
-    isPending,
+    hash: writeContract.data,
+    isPending: writeContract.isPending,
     isConfirming,
     isSuccess,
-    error,
+    error: writeContract.error,
     fxrpAddress
   }
 }
@@ -67,7 +55,7 @@ export function useFxrpBalance(address?: string) {
   // Fetch decimals from the token contract
   const { data: decimals, isLoading: isLoadingDecimals, error: decimalsError } = useReadContract({
     address: fxrpAddress,
-    abi: ERC20_ABI,
+    abi: erc20Abi,
     functionName: 'decimals',
     query: {
       enabled: !!fxrpAddress && typeof window !== 'undefined',
@@ -77,7 +65,7 @@ export function useFxrpBalance(address?: string) {
   // Fetch balance
   const { data: balance, isLoading: isLoadingBalance, error: balanceError } = useReadContract({
     address: fxrpAddress,
-    abi: ERC20_ABI,
+    abi: erc20Abi,
     functionName: 'balanceOf',
     args: address ? [address as `0x${string}`] : undefined,
     query: {
