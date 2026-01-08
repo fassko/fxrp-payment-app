@@ -1,6 +1,6 @@
 'use client'
 
-import { useWriteContract, useWaitForTransactionReceipt, useReadContract } from 'wagmi'
+import { useWriteContract, useWaitForTransactionReceipt, useReadContracts } from 'wagmi'
 import { parseUnits, erc20Abi } from 'viem'
 
 import { useFxrpAddress } from './useFxrpAddress'
@@ -52,35 +52,36 @@ export function useFxrpPayment() {
 export function useFxrpBalance(address?: string) {
   const { fxrpAddress, isLoading: isLoadingAddress, error: addressError } = useFxrpAddress()
   
-  // Fetch decimals from the token contract
-  const { data: decimals, isLoading: isLoadingDecimals, error: decimalsError } = useReadContract({
-    address: fxrpAddress,
-    abi: erc20Abi,
-    functionName: 'decimals',
-    query: {
-      enabled: !!fxrpAddress && typeof window !== 'undefined',
-    },
-  })
-
-  // Fetch balance
-  const { data: balance, isLoading: isLoadingBalance, error: balanceError } = useReadContract({
-    address: fxrpAddress,
-    abi: erc20Abi,
-    functionName: 'balanceOf',
-    args: address ? [address as `0x${string}`] : undefined,
+  // Fetch decimals and balance in a single call
+  const { data, isLoading, error } = useReadContracts({
+    contracts: [
+      {
+        address: fxrpAddress,
+        abi: erc20Abi,
+        functionName: 'decimals',
+      },
+      {
+        address: fxrpAddress,
+        abi: erc20Abi,
+        functionName: 'balanceOf',
+        args: address ? [address as `0x${string}`] : undefined,
+      },
+    ],
     query: {
       enabled: !!address && !!fxrpAddress && typeof window !== 'undefined',
     },
   })
 
-  const formattedBalance = formatBalance(balance as bigint | undefined, decimals as number | undefined)
+  const decimals = data?.[0].result as number | undefined
+  const balance = data?.[1].result as bigint | undefined
+  const formattedBalance = formatBalance(balance, decimals)
 
   return {
     balance: formattedBalance,
     rawBalance: balance,
-    decimals: decimals as number | undefined,
+    decimals,
     fxrpAddress,
-    isLoading: isLoadingAddress || isLoadingDecimals || isLoadingBalance,
-    error: addressError || decimalsError || balanceError,
+    isLoading: isLoadingAddress || isLoading,
+    error: addressError || error,
   }
 }
