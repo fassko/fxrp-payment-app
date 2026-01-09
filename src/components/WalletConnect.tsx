@@ -2,7 +2,7 @@
 
 import { useConnection, useConnectors, useConnect, useDisconnect } from 'wagmi'
 import { ClientOnly } from './ClientOnly'
-import { getExplorerAddressUrl, formatAddress } from '../lib/explorer'
+import { getExplorerAddressUrl, formatAddress } from '../lib/utils'
 
 function WalletConnectInner() {
   const { address, isConnected } = useConnection()

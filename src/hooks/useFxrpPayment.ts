@@ -1,10 +1,9 @@
 'use client'
 
 import { useWriteContract, useWaitForTransactionReceipt, useReadContracts } from 'wagmi'
-import { parseUnits, erc20Abi } from 'viem'
+import { parseUnits, formatUnits, erc20Abi } from 'viem'
 
 import { useFxrpAddress } from './useFxrpAddress'
-import { formatBalance } from '../lib/format'
 
 export function useFxrpPayment() {
   const { fxrpAddress } = useFxrpAddress()
@@ -51,8 +50,7 @@ export function useFxrpPayment() {
 
 export function useFxrpBalance(address?: string) {
   const { fxrpAddress, isLoading: isLoadingAddress, error: addressError } = useFxrpAddress()
-  
-  // Fetch decimals and balance in a single call
+
   const { data, isLoading, error } = useReadContracts({
     contracts: [
       {
@@ -68,13 +66,14 @@ export function useFxrpBalance(address?: string) {
       },
     ],
     query: {
-      enabled: !!address && !!fxrpAddress && typeof window !== 'undefined',
+      enabled: !!address && !!fxrpAddress,
     },
   })
 
-  const decimals = data?.[0].result as number | undefined
-  const balance = data?.[1].result as bigint | undefined
-  const formattedBalance = formatBalance(balance, decimals)
+  const [decimalsResult, balanceResult] = data ?? []
+  const decimals = decimalsResult?.result as number | undefined
+  const balance = balanceResult?.result as bigint | undefined
+  const formattedBalance = balance && decimals !== undefined ? formatUnits(balance, decimals) : '0'
 
   return {
     balance: formattedBalance,

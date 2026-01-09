@@ -8,5 +8,4 @@ export const config = createConfig({
   transports: {
     [flareTestnet.id]: http(),
   },
-  ssr: true,
 })

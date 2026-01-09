@@ -1,17 +1,31 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef, startTransition } from 'react'
 import { useConnection } from 'wagmi'
-import { useFxrpPayment, useFxrpBalance } from '../hooks/useFxrpPayment'
-import { getExplorerAddressUrl, getExplorerTransactionUrl, formatAddress } from '../lib/explorer'
 
-export function FxrpPayment() {
+import { useFxrpPayment, useFxrpBalance } from '../hooks/useFxrpPayment'
+import { getExplorerAddressUrl, getExplorerTransactionUrl, formatAddress } from '../lib/utils'
+import { ClientOnly } from './ClientOnly'
+
+function FxrpPaymentInner() {
   const { address, isConnected } = useConnection()
   const { balance, fxrpAddress, decimals, isLoading: isLoadingBalance, error: balanceError } = useFxrpBalance(address)
   const { sendFxrp, isPending, isConfirming, isSuccess, error, hash } = useFxrpPayment()
   
   const [recipient, setRecipient] = useState('')
   const [amount, setAmount] = useState('')
+  const previousHashRef = useRef<string | undefined>(undefined)
+
+  // Reset form fields when a new transaction hash is received
+  useEffect(() => {
+    if (hash && hash !== previousHashRef.current) {
+      previousHashRef.current = hash
+      startTransition(() => {
+        setRecipient('');
+        setAmount('');
+      })
+    }
+  }, [hash])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -138,5 +152,13 @@ export function FxrpPayment() {
         </div>
       )}
     </div>
+  )
+}
+
+export function FxrpPayment() {
+  return (
+    <ClientOnly>
+      <FxrpPaymentInner />
+    </ClientOnly>
   )
 }

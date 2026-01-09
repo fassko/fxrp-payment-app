@@ -1,7 +1,7 @@
 'use client'
 
-import { WalletConnect } from '../components/WalletConnect'
 import { FxrpPayment } from '../components/FxrpPayment'
+import { WalletConnect } from '../components/WalletConnect'
 
 export default function Home() {
   return (

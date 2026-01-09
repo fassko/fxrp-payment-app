@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+
 import "./globals.css";
 import { Providers } from './providers';
-import { geistSans, geistMono } from '../lib/fonts';
 
 export const metadata: Metadata = {
   title: "FXRP Payment App",
@@ -22,9 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className="antialiased">
         <Providers>
           {children}
         </Providers>
