@@ -120,7 +120,7 @@ function FxrpPaymentInner() {
         <button
           type="submit"
           disabled={isPending || isConfirming || !recipient || !amount}
-          className="w-full px-4 py-2 bg-[#E6007A] text-white rounded-md hover:bg-[#C40066] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+          className="w-full px-4 py-2 bg-[#E6007A] text-white rounded-md hover:bg-[#C40066] disabled:bg-gray-400 enabled:cursor-pointer disabled:cursor-not-allowed transition-colors"
         >
           {isPending ? 'Preparing...' : isConfirming ? 'Confirming...' : 'Send FXRP'}
         </button>

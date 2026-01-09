@@ -35,7 +35,7 @@ function WalletConnectInner() {
         </span>
         <button
           onClick={() => disconnect()}
-          className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900 transition-colors"
+          className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900 transition-colors cursor-pointer"
         >
           Disconnect
         </button>
@@ -46,7 +46,7 @@ function WalletConnectInner() {
   return (
     <button
       onClick={handleConnect}
-      className="px-4 py-2 bg-[#E6007A] text-white rounded hover:bg-[#C40066] transition-colors"
+      className="px-4 py-2 bg-[#E6007A] text-white rounded hover:bg-[#C40066] transition-colors cursor-pointer"
     >
       Connect Wallet
     </button>
