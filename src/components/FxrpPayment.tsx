@@ -16,6 +16,10 @@ function FxrpPaymentInner() {
   const [amount, setAmount] = useState('')
   const previousHashRef = useRef<string | undefined>(undefined)
 
+  // Calculate step value and placeholder based on token decimals
+  const stepValue = decimals ? (1 / Math.pow(10, decimals)).toString() : "0.000001"
+  const placeholderValue = decimals ? `0.${'0'.repeat(decimals)}` : "0.0"
+
   // Reset form fields when a new transaction hash is received
   useEffect(() => {
     if (hash && hash !== previousHashRef.current) {
@@ -62,7 +66,7 @@ function FxrpPaymentInner() {
         ) : balanceError ? (
           <p className="font-bold text-red-600">Error: {balanceError.message}</p>
         ) : (
-          <p className="font-bold text-gray-900 mb-1">{parseFloat(balance).toFixed(4)} FXRP</p>
+          <p className="font-bold text-gray-900 mb-1">{parseFloat(balance).toFixed(decimals || 6)} FXRP</p>
         )}
         {fxrpAddress && (
           <p className="text-xs text-gray-600 mt-2">
@@ -115,10 +119,10 @@ function FxrpPaymentInner() {
           <input
             id="amount"
             type="number"
-            step="0.000001"
+            step={stepValue}
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder="0.0"
+            placeholder={placeholderValue}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E6007A] text-gray-900 placeholder:text-gray-400"
             required
           />
