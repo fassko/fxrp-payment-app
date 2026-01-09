@@ -9,7 +9,7 @@ import { ClientOnly } from './ClientOnly'
 
 function FxrpPaymentInner() {
   const { address, isConnected } = useConnection()
-  const { balance, fxrpAddress, decimals, isLoading: isLoadingBalance, error: balanceError } = useFxrpBalance(address)
+  const { balance, fxrpAddress, decimals, isLoading: isLoadingBalance, error: balanceError, refetch } = useFxrpBalance(address)
   const { sendFxrp, isPending, isConfirming, isSuccess, error, hash } = useFxrpPayment()
   
   const [recipient, setRecipient] = useState('')
@@ -26,6 +26,13 @@ function FxrpPaymentInner() {
       })
     }
   }, [hash])
+
+  // Refresh balance after successful transfer
+  useEffect(() => {
+    if (isSuccess) {
+      refetch()
+    }
+  }, [isSuccess, refetch])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

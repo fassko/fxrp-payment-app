@@ -51,7 +51,7 @@ export function useFxrpPayment() {
 export function useFxrpBalance(address?: string) {
   const { fxrpAddress, isLoading: isLoadingAddress, error: addressError } = useFxrpAddress()
 
-  const { data, isLoading, error } = useReadContracts({
+  const { data, isLoading, error, refetch } = useReadContracts({
     contracts: [
       {
         address: fxrpAddress,
@@ -82,5 +82,6 @@ export function useFxrpBalance(address?: string) {
     fxrpAddress,
     isLoading: isLoadingAddress || isLoading,
     error: addressError || error,
+    refetch,
   }
 }
